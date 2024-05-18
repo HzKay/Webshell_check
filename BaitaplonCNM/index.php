@@ -122,7 +122,7 @@ else
                       <div class="table-file">
                         <form name="form1" method="post" action="" >
                         <?php
-                          $xuLyFile->load_ds_file("select * from account a join uploadfile u on a.id=u.id_account where u.id_account = {$_SESSION['id']}");
+                          $xuLyFile->load_ds_file("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account where u.id_account = {$_SESSION['id']}");
                         ?>
                         </form>
                       </div>
@@ -160,21 +160,23 @@ else
   </div>
 </div>
 <?php
-switch(isset($_REQUEST['btn']))
+if(isset($_REQUEST['btn']))
 {
-  case 'UPLOAD FILE':
+  switch($_REQUEST['btn'])
   {
-    $xuLyFile->xuLyLuuFile();
-    break;
+    case 'Đăng xuất':
+    {
+      $p->logout();
+      break;	
+    }
+    case 'UPLOAD':
+    {
+      $xuLyFile->xuLyLuuFile();
+      break;
+    }
+  
   }
-	case 'Đăng xuất':
-	{
-	  $p->logout();
-    break;	
-	}
-
 }
-
 if (isset($_REQUEST['message'])) {
   echo "
       <script>

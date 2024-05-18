@@ -57,7 +57,7 @@ switch(isset($_REQUEST['txtDN']))
 		if($ten!="" && $pass!="")
 		{
 			$p->login($ten,$pass);
-            
+
 			
 		}
 		else

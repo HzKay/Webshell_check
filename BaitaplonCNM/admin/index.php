@@ -7,6 +7,8 @@ if(isset($_SESSION['id']) && isset($_SESSION['ten']) && isset($_SESSION['passwor
 	if($_SESSION['phanquyen']==2)
 	{
 		$p->confirmlogin($_SESSION['id'],$_SESSION['ten'],$_SESSION['password'],$_SESSION['phanquyen']);
+		include_once("../class/clsXuLyFile.php");
+		$xuLyFile = new clsXuLyFile();
 	}
 	else
 	{
@@ -110,23 +112,27 @@ else
 				<h4>Trang chủ</h4>
 				<div id="dashboard" class="color1">
 					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $p->laycot("select count(id) from account where phanquyen=1"); ?></h2>
+						<h2 class="pl-3 pt-2"><?php echo $xuLyFile->laycot("select count(id) from account where phanquyen=1"); ?></h2>
 						<h5 class="pl-3 pt-1">NGƯỜI DÙNG</h5>
 					</div>
 					<div class="float-left pl-5 pt-3">
 						<i class="fa fa-user-plus icon-user" aria-hidden="true"></i>
 					</div>
-					<button type="button" class="btn btn-load mt-2">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					<form action="" method="post" enctype="multipart/form-data">
+					<button type="submit" class="btn btn-load mt-2" value="người dùng" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					</form>
 				</div>
 				<div id="dashboard" class="color2">
 					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $p->laycot("select count(id) from uploadfile"); ?></h2>
+						<h2 class="pl-3 pt-2"><?php echo $xuLyFile->laycot("select count(id) from uploadfile"); ?></h2>
 						<h5 class="pl-3 pt-1">FILE UPLOAD</h5>
 					</div>
 					<div class="float-left pl-5 pt-3">
 					<i class="fa fa-bar-chart icon-user" aria-hidden="true"></i>
 					</div>
-					<button type="button" class="btn btn-load mt-2">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					<form action="" method="post" enctype="multipart/form-data">
+					<button type="submit" class="btn btn-load mt-2" value="file upload" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					</form>
 				</div>
 				<div id="dashboard" class="color3">
 					<div class="float-left">
@@ -136,7 +142,9 @@ else
 					<div class="float-left pl-5 pt-3">
 					<i class="fa fa-bar-chart icon-user" aria-hidden="true"></i>
 					</div>
-					<button type="button" class="btn btn-load mt-2">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					<form action="" method="post" enctype="multipart/form-data">
+					<button type="submit" class="btn btn-load mt-2" value="kích thước" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+					</form>
 				</div>
 			  </div>
 			  <div id="tailen" class="container tab-pane fade">
@@ -196,6 +204,26 @@ else
 					</form>
 				 </div>
 			  </div>
+			</div>
+			<div class="row" style="padding-top:20px;">
+				<?php
+				if(isset($_REQUEST['btn']))
+				{
+					switch($_REQUEST['btn'])
+					{
+						case 'người dùng':
+						{
+							$xuLyFile->load_ds_nguoidung("select*from account where phanquyen=1");
+							break;
+						}
+						case 'file upload':
+							{
+								$xuLyFile->load_ds_file("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
+								break;
+							}
+					}
+				}
+				?>
 			</div>
 		</div>
 		</div>
