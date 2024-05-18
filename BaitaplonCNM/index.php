@@ -160,19 +160,21 @@ else
   </div>
 </div>
 <?php
-switch(isset($_REQUEST['btn']))
+if (isset($_REQUEST['btn']))
 {
-  case 'UPLOAD FILE':
+  switch($_REQUEST['btn'])
   {
-    $xuLyFile->xuLyLuuFile();
-    break;
+    case 'Đăng xuất':
+    {
+      $p->logout();
+      break;	
+    }
+    case 'UPLOAD':
+    {
+      $xuLyFile->xuLyLuuFile();
+      break;
+    }
   }
-	case 'Đăng xuất':
-	{
-	  $p->logout();
-    break;	
-	}
-
 }
 
 if (isset($_REQUEST['message'])) {
