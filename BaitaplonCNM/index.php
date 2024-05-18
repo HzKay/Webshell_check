@@ -122,7 +122,7 @@ else
                       <div class="table-file">
                         <form name="form1" method="post" action="" >
                         <?php
-                          $xuLyFile->load_ds_file("select * from account a join uploadfile u on a.id=u.id_account where u.id_account = {$_SESSION['id']}");
+                          $xuLyFile->load_ds_file("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account where u.id_account = {$_SESSION['id']}");
                         ?>
                         </form>
                       </div>
