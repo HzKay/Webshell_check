@@ -1,6 +1,8 @@
 <?php 
 include_once("class/clslogin.php");
+include_once("class/clsnotion.php");
 $p=new dangnhap();
+$error = new notionStatus();
 session_start();
 if(isset($_SESSION['id']) && isset($_SESSION['ten']) && isset($_SESSION['password']) && isset($_SESSION['phanquyen']))
 {
@@ -133,32 +135,6 @@ else
     </div>
   </nav>
 </div>
-<div class="modal fade" id="resultModal" role="dialog" aria-label="resultModalLabel"  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <div class="icon-status mt-2 p-5">
-          <?php
-            if($_REQUEST['message'] == 1)
-            {
-              echo '<i class="far fa-check-circle text-success mb-3"></i></br>';
-              echo '<h3 class="text-success">Upload file thành công<h3>';
-            } elseif ($_REQUEST['message'] == 0)
-            {
-              echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-              echo '<h3 class="text-danger">Upload file thất bại</h3>';
-            } elseif ($_REQUEST['message'] == -1)
-            {
-              echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-              echo '<h3 class="text-danger">Upload file thất bại! </br>File của bạn có thể chứa webshell</h3>';
-            }
-          ?>
-        </div>
-        <input type="button" class="btn btn-accept mb-3" data-dismiss="modal" value="Okay">
-      </div>
-    </div>
-  </div>
-</div>
 <?php
 if (isset($_REQUEST['btn']))
 {
@@ -178,13 +154,7 @@ if (isset($_REQUEST['btn']))
 }
 
 if (isset($_REQUEST['message'])) {
-  echo "
-      <script>
-      $(document).ready(function() {
-        $('#resultModal').modal('show')
-      })
-    </script>
-  ";
+  $error->modelNotion($_REQUEST['message']);
 }
 ?>
 </body>

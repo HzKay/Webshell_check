@@ -61,16 +61,19 @@ if(isset($_REQUEST['btndelete']))
 			unlink($filePath);
 			if($result==1)
 			{
-				echo " <script>alert('Xóa file thành công')</script>;";
+				var_dump($filePath);
+				die();
 				echo '<script language="javascript">
-					window.location="./";
+					window.location="./?message=2";
 						</script>';
 			}
 			else
 			{
-				echo " <script>alert('Xóa file thất bại')</script>;";
+				
+				var_dump($filePath);
+				die();
 				echo '<script language="javascript">
-					window.location="./";
+					window.location="./?message=-2";
 						</script>';
 			}
 			break;
