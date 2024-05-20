@@ -64,7 +64,7 @@ class clsXuLyFile extends connectDB
             // Kiểm tra xem phiên đã được khởi động trước khi sử dụng biến $_SESSION
             if (isset($_SESSION["id"])) {
                 $idaccount = $_SESSION["id"];
-                $name = time() . "_" . $name;
+                // $name = time() . "_" . $name;
                 if ($this->upload_file($tmp_name, "upload", $name) == 1) {
                     $sql = "insert into uploadfile(id_account,tenfile,loaifile,uploadtime) values ('$idaccount','$filename_without_extension','$extension','$uploadTime')";
                     $result = $this->themxoasua($sql);
@@ -107,6 +107,24 @@ class clsXuLyFile extends connectDB
             return 0;
         }
     }
+    
+    public function getFilename ($sql) {
+        $conn = $this->connectDB();
+        $result = mysqli_query($conn, $sql);
+
+        $numrow = mysqli_num_rows($result);
+
+        if($numrow > 0)
+        {
+            $fileName = mysqli_fetch_array($result);
+            $filePath = $fileName["tenfile"] . '.' . $fileName["loaifile"];
+            return $filePath;
+        } else
+        {
+            return 0;
+        }
+    }
+
     public function load_ds_file($sql)
     {
         $link = $this->connectDB();

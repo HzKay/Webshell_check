@@ -54,7 +54,11 @@ if(isset($_REQUEST['btndelete']))
 	{
 		case 'Có':
 		{
+			$temp = $p->getFilename("SELECT tenfile, loaifile FROM uploadfile WHERE id = {$layid}");
+			$filePath = 'upload/' . $temp;
 			$result=$p->themxoasua("delete from uploadfile where id='$layid'");
+
+			unlink($filePath);
 			if($result==1)
 			{
 				echo " <script>alert('Xóa file thành công')</script>;";
