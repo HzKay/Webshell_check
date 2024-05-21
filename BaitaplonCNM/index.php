@@ -124,7 +124,7 @@ else
                       <div class="table-file">
                         <form name="form1" method="post" action="" >
                         <?php
-                          $xuLyFile->showFiles("http://localhost/Project-CNM/api/xem.php?id={$_SESSION['id']}");
+                          $xuLyFile->showFiles("http://localhost/Webshell_check/api/xem.php?id={$_SESSION['id']}");
                         ?>
                         </form>
                       </div>
