@@ -12,7 +12,6 @@ if(isset($_SESSION['id']) && isset($_SESSION['ten']) && isset($_SESSION['passwor
 	}
 	else
 	{
-
 		echo '<script language="javascript">
 					alert("Bạn không có quyền đăng nhập trang này!");
 						</script>';
@@ -218,7 +217,7 @@ else
 						}
 						case 'file upload':
 							{
-								$xuLyFile->load_ds_file("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
+								$xuLyFile->showFiles("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
 								break;
 							}
 					}

@@ -1,7 +1,17 @@
 <?php
 include_once("connect.php");
+// include_once("class/clsHandleApi.php");
 class clsXuLyFile extends connectDB
 {
+    private function readApi ($url)
+    {
+        $client = curl_init($url);
+        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+        $respone = curl_exec($client);
+        $result = json_decode($respone);
+        return $result;
+    }
+
     public function xuLyLuuFile()
     {
        if ($this->kiemTraFile() == 1)
@@ -33,7 +43,6 @@ class clsXuLyFile extends connectDB
             $file = new CURLFile($tmpName, $fileType, $fileName);
 
             $postData = array('file' => $file);
-
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
 
             $response = curl_exec($curl);
@@ -57,7 +66,7 @@ class clsXuLyFile extends connectDB
             $filename_without_extension = pathinfo($name, PATHINFO_FILENAME);
             $tmp_name = $_FILES["file"]["tmp_name"];
             $type = $_FILES["file"]["type"];
-            $extension = explode(".", $name)[1];
+            $extension = end(explode(".", $name));
 
             // Lấy thời gian upload
             $uploadTime = date("Y-m-d H:i:s");
@@ -124,66 +133,47 @@ class clsXuLyFile extends connectDB
             return 0;
         }
     }
-
-    public function load_ds_file($sql)
+    public function showFiles($url)
     {
-        $link = $this->connectDB();
-        $ketqua = mysqli_query($link, $sql);
-        $i = mysqli_num_rows($ketqua);
-        if ($i > 0) {
-            echo '<table class="table table-hover">
-				<thead class="thead-light">
-				<tr>
-					<th  scope="col">ID</th>
-					<th  scope="col">Name</th>
-					<th  scope="col">Type</th>
-					<th  scope="col">Upload time</th>
-					<th  scope="col">Author</th>
-					<th  scope="col"></th>
-					</tr>
-					</thead>
-				<tbody>';
-            $dem = 1;
-            while ($row = mysqli_fetch_array($ketqua)) {
-                $id=$row['id'];
-                $tenfile = $row["tenfile"];
-                $loaifile = $row["loaifile"];
-                $uploadtime = $row["uploadtime"];
-                $ten = $row["ten"];
-                echo '<tr>
-					<td scope="row">' .
-                    $dem .
-                    '</td>
-					<td>' .
-                    $tenfile .
-                    '</td>
-					<td>' .
-                    $loaifile .
-                    '</td>
-					<td>' .
-                    $uploadtime .
-                    '</td>
-					<td>' .
-                    $ten .
-                    '</td>
-					<td>
-						<div>
-						  <a  href="#"><i class="fa fa-eye action" aria-hidden="true"></i></a>
-						  <a  href="#"><i class="fa fa-download action" aria-hidden="true"></i></a>
-						  <a  href="./delete_file.php?id='.$id.'"><i class="fa fa-trash action" aria-hidden="true"></i></a>
-						</div>
-					</td>
-				  </tr>';
+        $result=$this->readApi($url);
+        echo '<table class="table table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th  scope="col">Id</th>
+                <th  scope="col">Tên</th>
+                <th  scope="col">Loại</th>
+                <th  scope="col">Tải lên</th>
+                <th  scope="col">Chủ sỡ hữu</th>
+                <th  scope="col">Thao tác</th>
+                </tr>
+                </thead>
+            <tbody>';
+        $stt = 1;
+        foreach ($result as $row) {
+            $id=$row->id;
+            $tenfile = $row->tenfile;
+            $loaifile = $row->loaifile;
+            $uploadtime = $row->uploadTime;
+            $ten = $row->ten;
+            echo '<tr>
+                <td scope="row">' .$stt .'</td>
+                <td>' . $tenfile . '</td>
+                <td>' . $loaifile . '</td>
+                <td>' . $uploadtime .'</td>
+                <td>' . $ten . '</td>
+                <td>
+                    <div>
+                        <a  href="#"><i class="fa fa-download action" aria-hidden="true"></i></a>
+                        <a  href="./delete_file.php?id='.$id.'"><i class="fa fa-trash action" aria-hidden="true"></i></a>
+                    </div>
+                </td>
+                </tr>';
 
-                $dem++;
-            }
-            echo '     
-				</tbody>
-				</table>';
-        } else {
-            echo " Không có dữ liệu";
+            $stt++;
         }
-        mysqli_close($link);
+        echo '     
+            </tbody>
+            </table>';
     }
     public function laycot($sql)
 	{

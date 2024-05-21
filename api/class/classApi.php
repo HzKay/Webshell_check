@@ -44,8 +44,9 @@
                     $tenfile = $row['tenfile'];
                     $loaifile = $row['loaifile'];
                     $uploadtime = $row['uploadtime'];
+                    $ten = $row['ten'];
 
-                    $data[] = array("id" => $id, "tenfile" => $tenfile, "loaifile" => $loaifile, "id-account" => $idAccount, "uploadTime" => $uploadtime);
+                    $data[] = array("id" => $id, "tenfile" => $tenfile, "loaifile" => $loaifile, "id-account" => $idAccount, "uploadTime" => $uploadtime, "ten" =>$ten);
                 }
 
                 header('content-Type:application/json; charset=UTF-8');

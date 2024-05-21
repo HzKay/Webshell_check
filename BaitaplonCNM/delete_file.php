@@ -61,17 +61,12 @@ if(isset($_REQUEST['btndelete']))
 			unlink($filePath);
 			if($result==1)
 			{
-				var_dump($filePath);
-				die();
 				echo '<script language="javascript">
 					window.location="./?message=2";
 						</script>';
 			}
 			else
 			{
-				
-				var_dump($filePath);
-				die();
 				echo '<script language="javascript">
 					window.location="./?message=-2";
 						</script>';
