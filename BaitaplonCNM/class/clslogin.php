@@ -23,6 +23,7 @@ class dangnhap extends connectDB
 				$_SESSION['ten']=$ten;
 				$_SESSION['password']=$pass;
 				$_SESSION['phanquyen']=$phanquyen;
+				$_SESSION['accountFolder']=  'upload/'. $_SESSION['id'] .'_'. $_SESSION['ten'];
 				header('location:./'); 
 			}
 		}

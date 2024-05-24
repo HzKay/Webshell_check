@@ -3,14 +3,8 @@ include_once "connect.php";
 // include_once("class/clsHandleApi.php");
 class clsXuLyFile extends connectDB
 {
-    private $folder = "upload";
-    private $accountFolder;
     private $urlApi = "http://localhost/Webshell_check/api";
 
-    public function __construct()
-    {   
-        $this->accountFolder = $this->folder .'/'. $_SESSION['id'] .'_'. $_SESSION['ten'];
-    }
 
     private function readApi($url)
     {
@@ -35,7 +29,7 @@ class clsXuLyFile extends connectDB
         $resultCheck = $this->kiemTraFile();
         if ($resultCheck == 1) {
             $result = -1;
-            $this->changeLocation('index', $result);
+            $this->changeLocation('index.php', $result);
         } else {
             $this->luuFile();
         }
@@ -88,7 +82,7 @@ class clsXuLyFile extends connectDB
                 $idaccount = $_SESSION["id"];
 
                 if ($this->handeUploadfile($tmp_name, $name) == 1) {
-                    $url = "{$this->urlApi}/themFile.php?filename={$filename}&ext={$extension}&filepath={$this->accountFolder}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}";
+                    $url = "{$this->urlApi}/themFile.php?filename={$filename}&ext={$extension}&filepath={$_SESSION['accountFolder']}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}";
 
                     $result = $this->excuteApi($url);
 
@@ -96,13 +90,13 @@ class clsXuLyFile extends connectDB
                         $result = 0;
                     }
                     
-                    $this->changeLocation('index', $result);
+                    $this->changeLocation('index.php', $result);
                 }
             } else {
-                $this->changeLocation('index', 99);
+                $this->changeLocation('index.php', 99);
             }
         } else {
-            $this->changeLocation('index', 0);
+            $this->changeLocation('index.php', 0);
         }
     }
 
@@ -121,9 +115,9 @@ class clsXuLyFile extends connectDB
 
     public function createFolder()
     {
-        if(!file_exists($this->accountFolder))
+        if(!file_exists($_SESSION['accountFolder']))
         {
-            mkdir($this->accountFolder);
+            mkdir($_SESSION['accountFolder']);
             return 1;
         } else {
             return 0;
@@ -134,8 +128,8 @@ class clsXuLyFile extends connectDB
 
     public function upload_file($tmp_name, $name)
     {
-        if ($tmp_name != "" && $this->accountFolder != "" && $name != "") {
-            $filepath = $this->accountFolder . "/" . $name;
+        if ($tmp_name != "" && $_SESSION['accountFolder'] != "" && $name != "") {
+            $filepath = $_SESSION['accountFolder'] . "/" . $name;
 
             if (move_uploaded_file($tmp_name, $filepath)) {
                 return 1;
@@ -147,19 +141,19 @@ class clsXuLyFile extends connectDB
         }
     }
 
-    public function changeLocation ($file = 'default', $message=-520)
+    public function changeLocation ($file = 'filename.php', $message=-520)
     {
-        if($file != '' && $file != 'default')
+        if($file != '' && $file != 'filename.php')
         {
             $message = (int) $message;
             if ($message === -520)
             {
                 echo "<script language='javascript'>
-                    window.location='./{$file}.php';
+                    window.location='./{$file}';
                 </script>";
             } else {
                 echo "<script language='javascript'>
-                        window.location='./{$file}.php?message={$message}';
+                        window.location='./{$file}?message={$message}';
                   </script>";
             }
         } else {
@@ -221,8 +215,8 @@ class clsXuLyFile extends connectDB
                 $loaifile = $row->loaifile;
                 $uploadtime = $row->uploadTime;
                 $ten = $row->ten;
-                $size = $row->size;
-                $urlfile = "{$this->accountFolder}/{$tenfile}.{$loaifile}";
+                $size = $this->showSize($row->size);
+                $urlfile = "{$_SESSION['accountFolder']}/{$tenfile}.{$loaifile}";
                 echo '<tr>
                     <td scope="row">' .
                     $stt .
@@ -261,7 +255,21 @@ class clsXuLyFile extends connectDB
             </tbody>
             </table>';
     }
-    
+
+    public function showSize ($size) 
+    {
+        if($size > 0)
+        {
+            $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+            $unitIndex = floor(log($size, 1024));
+            $formatSize = $size / pow(1024, $unitIndex);
+            $formatSize = round($formatSize * 100) / 100;
+            return $formatSize . ' ' . $units[$unitIndex];
+        } else {
+            return '0 KB';
+        }
+    }
+
     public function laycot($sql)
     {
         $link = $this->connectDB();
@@ -334,28 +342,45 @@ class clsXuLyFile extends connectDB
         $urlDel = $this->urlApi."/xoa.php?idFile={$idFileDel}&idAccount={$idAccount}&role={$role}";
         
         $file = $this->readApi($urlRead)[0];
-        $filepath = $this->accountFolder . '/' . $file->tenfile .'.'. $file->loaifile;
+        $filepath = $_SESSION['accountFolder'] . '/' . $file->tenfile .'.'. $file->loaifile;
 
         if(unlink($filepath))
         {
             $resultDel = $this->excuteApi($urlDel);
             if($resultDel == 1)
             {
-                $this->changeLocation('index', 2);
+                $this->changeLocation('index.php', 2);
             } else {
-                $this->changeLocation('index', -2);
+                $this->changeLocation('index.php', -2);
             }
         }
         else
         {
-            $this->changeLocation('index', -2);
+            $this->changeLocation('index.php', -2);
         }
     }
 
-    public function downloadFile($urlfile)
+    public function downloadFile($urlfile, $filename, $download_rate=10000)
     {
-        header("Content-Disposition: attachment; filename={$urlfile}");
-        readfile($urlfile);
+        if(file_exists($urlfile) && is_file($urlfile))
+        {
+            header('Cache-control: private');
+            header('Content-Type: application/octet-stream');
+            header('Content-Length: '.filesize($urlfile));
+            header('Content-Disposition: filename='.$filename);
+            flush();
+            $file = fopen($urlfile, "r");
+
+            while (!feof($file))
+            {
+                    print fread($file, round($download_rate * 1024));
+                    flush();
+                    sleep(1);
+            }
+            fclose($file);
+        }else {
+            echo "<script>alert('Lỗi: {$filename} không tồn tại');</script>";
+        }
     }
 }
 

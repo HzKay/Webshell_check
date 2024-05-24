@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 include_once("class/clslogin.php");
 include_once("class/clsnotion.php");
 $p=new dangnhap();
@@ -26,6 +27,7 @@ else
 {
 	header('location:./login.php');
 } 
+ob_end_flush();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,7 +82,9 @@ else
                   <button type="button" class="btn user" data-toggle="dropdown">
                   <span class="float-right glyphicon glyphicon-search "><i class="fas fa-user"></i></span>
                   </button>
-                  <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-menu dropdown-menu-right mt-2">
+                    <p class="username text-center"><?php echo $_SESSION['ten']?></p>
+                    <hr>
                     <form action="" method="post">
                        <input type="submit" name="btn" class="btn btn-block btn-logout" value="Đăng xuất">
                     </form>
@@ -154,7 +158,7 @@ if (isset($_REQUEST['btn']))
     case 'delete':
     {
       $_SESSION['idFileDel'] = $_REQUEST['idfile'];
-      $xuLyFile->changeLocation('index', 3);
+      $xuLyFile->changeLocation('index.php', 3);
       break;
     }
     case 'btn-del-yes':
@@ -164,12 +168,13 @@ if (isset($_REQUEST['btn']))
     }
     case 'btn-del-no':
     {
-      $xuLyFile->changeLocation('index');
+      $xuLyFile->changeLocation('index.php');
 			break;
     }
     case 'download':
     {
-      $xuLyFile->downloadFile($urlfile);
+      $urlfile = $_REQUEST['urlfile'];
+      $xuLyFile->changeLocation("download.php?urlfile={$urlfile}");
       break;
     }
   }
