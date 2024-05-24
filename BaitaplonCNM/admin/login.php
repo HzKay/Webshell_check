@@ -40,10 +40,6 @@ $p=new dangnhap();
         </div>
         <div class="form-group mt-3">
             <input type="submit" class="btn  btn-block btn-login" id="txtDN" name="txtDN" value="Đăng nhập"><br>
-            <div class="text-center">
-            <label> Nếu bạn chưa có tài khoản đăng nhập?</label>
-           <a href="./singup.php">Đăng ký</a>
-            </div>
         </div>
      </form>
      <div class="text-center text-danger" style="font-weight: bold;">
@@ -64,7 +60,7 @@ switch(isset($_REQUEST['txtDN']))
 		{
 			echo 'Vui lòng nhập đầy đủ thông tin';
 		}
-		
+	break;	
 	}
 }
 ?>

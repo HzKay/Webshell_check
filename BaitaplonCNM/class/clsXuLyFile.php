@@ -218,24 +218,12 @@ class clsXuLyFile extends connectDB
                 $size = $this->showSize($row->size);
                 $urlfile = "{$_SESSION['accountFolder']}/{$tenfile}.{$loaifile}";
                 echo '<tr>
-                    <td scope="row">' .
-                    $stt .
-                    '</td>
-                    <td>' .
-                    $tenfile .
-                    '</td>
-                    <td>' .
-                    $loaifile .
-                    '</td>
-                    <td>' .
-                    $uploadtime .
-                    '</td>
-                    <td>' .
-                    $ten .
-                    '</td>
-                    <td>' .
-                    $size .
-                    '</td>
+                    <td scope="row">' .$stt .'</td>
+                    <td>' .$tenfile .'</td>
+                    <td>' .$loaifile .'</td>
+                    <td>' .$uploadtime .'</td>
+                    <td>' .$ten .'</td>
+                    <td>' .$size .'</td>
                     <td>
                         <div>                       
                             <form action="" method="post">
@@ -250,10 +238,15 @@ class clsXuLyFile extends connectDB
     
                 $stt++;
             }
+            echo '     
+                </tbody>
+                </table>';
+        } else {
+            echo '     
+                </tbody>
+                </table>';
+            echo '<p>Không có kết quả</p>';
         }
-        echo '     
-            </tbody>
-            </table>';
     }
 
     public function showSize ($size) 

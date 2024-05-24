@@ -86,8 +86,11 @@ else
 					</form>
 					</div>
 					<div class="col-sm-4">
-					<i class="fa fa-bell thongbao" aria-hidden="true"></i>
-					<i class="fa fa-comments comment" aria-hidden="true"></i>
+					<form action="" method="post">
+						<i class="fa fa-bell thongbao" aria-hidden="true"></i>
+						<i class="fa fa-comments comment" aria-hidden="true"></i>
+                       <input type="submit" name="btn" class="btn btn-block btn-logout" value="Đăng xuất">
+                    </form>
 					</div>
 				</div>
 			</div>
@@ -216,10 +219,16 @@ else
 							break;
 						}
 						case 'file upload':
-							{
-								$xuLyFile->showFiles("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
-								break;
-							}
+						{
+							$xuLyFile->showFiles("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
+							break;
+						}
+						case 'Đăng xuất':
+						{
+							session_unset();
+							session_destroy();
+							echo "<script>window.location.replace('login.php')</script>";
+						}
 					}
 				}
 				?>

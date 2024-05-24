@@ -65,14 +65,14 @@ ob_end_flush();
        <div class="row">
           <div class="col-sm-2 col-xs-12"> 
             <!-- Header Logo -->
-            <div class=" title"><a title="logo" href="demo.php"><h4 class="h4">UPLOAD</h4></a></div>
+            <div class=" title"><a title="logo" href="index.php"><h4 class="h4">UPLOAD</h4></a></div>
             <!-- End Header Logo --> 
           </div>
           <div class="col-lg-7 col-xs-12 m-2" >
            <div class="search-box pull-right">
               <form action="" method="POST" id="search_mini_form" name="Categories">
-                <input type="text" placeholder="Tìm kiếm file" name="search" id="search">
-                <button type="button" class="search-btn-bg" style="float:right; padding:4px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
+                <input type="text" placeholder="Tìm kiếm file" name="txtsearch" id="search">
+                <button type="submit" class="search-btn-bg" name="btn" value="search" style="float:right; padding:4px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
               </form>
             </div>
           </div>
@@ -129,7 +129,13 @@ ob_end_flush();
                       <div class="table-file">
                         <form name="form1" method="post" action="" >
                         <?php
+                        if(isset($_REQUEST['content']))
+                        {
+                          $url = "http://localhost/Webshell_check/api/timkiem.php?search={$_REQUEST['content']}&role={$_SESSION['phanquyen']}&idAccount={$_SESSION['id']}";
+                          $xuLyFile->showFiles($url);
+                        } else {
                           $xuLyFile->showFiles("http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}");
+                        }
                         ?>
                         </form>
                       </div>
@@ -175,6 +181,12 @@ if (isset($_REQUEST['btn']))
     {
       $urlfile = $_REQUEST['urlfile'];
       $xuLyFile->changeLocation("download.php?urlfile={$urlfile}");
+      break;
+    }
+    case 'search':
+    {
+      $searchContent = $_REQUEST['txtsearch'];
+      $xuLyFile->changeLocation("index.php?content={$searchContent}");
       break;
     }
   }
