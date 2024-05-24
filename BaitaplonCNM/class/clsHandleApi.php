@@ -10,6 +10,10 @@
             return $result;
         }
 
+        public function sendApi ()
+        {
+            
+        }
         
     }
 ?>

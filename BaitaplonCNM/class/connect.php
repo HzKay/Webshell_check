@@ -7,7 +7,6 @@
             {
                 echo 'Không kết nối với CSDL';
                 exit();
-                
             }
             else
             {

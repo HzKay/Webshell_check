@@ -1,12 +1,6 @@
-import re 
-import os
-import math 
-import pandas as pd 
-import numpy as np
+import re
+import math
 import pickle
-from collections import Counter
-
-
 
 def _load_model():
     filename = 'model-webshell.pickle'

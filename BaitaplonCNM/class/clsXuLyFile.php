@@ -1,9 +1,18 @@
 <?php
-include_once("connect.php");
+include_once "connect.php";
 // include_once("class/clsHandleApi.php");
 class clsXuLyFile extends connectDB
 {
-    private function readApi ($url)
+    private $folder = "upload";
+    private $accountFolder;
+    private $urlApi = "http://localhost/Webshell_check/api";
+
+    public function __construct()
+    {   
+        $this->accountFolder = $this->folder .'/'. $_SESSION['id'] .'_'. $_SESSION['ten'];
+    }
+
+    private function readApi($url)
     {
         $client = curl_init($url);
         curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
@@ -12,92 +21,123 @@ class clsXuLyFile extends connectDB
         return $result;
     }
 
+    private function excuteApi($url)
+    {
+        $client = curl_init($url);
+        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+        $respone = curl_exec($client);
+        $result = json_decode($respone)->result;
+        return $result;
+    }
+
     public function xuLyLuuFile()
     {
-       if ($this->kiemTraFile() == 1)
-       {
-        $result = -1;
-        echo '<script language="javascript">
-        window.location="./index.php?message='.$result.'";
-          </script>';
-       } else {
-        $this->luuFile();
-       }
-
+        $resultCheck = $this->kiemTraFile();
+        if ($resultCheck == 1) {
+            $result = -1;
+            $this->changeLocation('index', $result);
+        } else {
+            $this->luuFile();
+        }
     }
 
     private function kiemTraFile()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file']))
-        {
-            $url = 'http://localhost:5000/predict';
-            $tmpName = $_FILES['file']['tmp_name'];
-            $fileName = $_FILES['file']['name'];
-            $fileType = $_FILES['file']['type'];
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
+            // $url = "https://localhost:5000/predict";
+            $url = "https://webshell-v7dmwwagqq-uc.a.run.app/predict";
+            $tmpName = $_FILES["file"]["tmp_name"];
+            $fileName = $_FILES["file"]["name"];
+            $fileType = $_FILES["file"]["type"];
 
             $curl = curl_init($url);
 
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($curl, CURLOPT_POST, TRUE);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POST, true);
 
             $file = new CURLFile($tmpName, $fileType, $fileName);
 
-            $postData = array('file' => $file);
+            $postData = ["file" => $file];
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
 
+            
             $response = curl_exec($curl);
 
-            if (curl_errno($curl)) 
-            {
-                echo 'Error: ' . curl_error($curl);
+            if (curl_errno($curl)) {
+                echo "Error: " . curl_error($curl);
             }
 
             curl_close($curl);
-
             return json_decode($response)->result;
         }
     }
-
+    
     public function luuFile()
     {
         if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
             // Lấy thông tin về tập tin
             $name = $_FILES["file"]["name"];
-            $filename_without_extension = pathinfo($name, PATHINFO_FILENAME);
+            $filename = pathinfo($name, PATHINFO_FILENAME);
             $tmp_name = $_FILES["file"]["tmp_name"];
-            $type = $_FILES["file"]["type"];
-            $extension = end(explode(".", $name));
+            $size = $_FILES['file']['size'];
+            $temp = explode(".", $name);
+            $extension = end($temp);
 
-            // Lấy thời gian upload
-            $uploadTime = date("Y-m-d H:i:s");
             // Kiểm tra xem phiên đã được khởi động trước khi sử dụng biến $_SESSION
             if (isset($_SESSION["id"])) {
                 $idaccount = $_SESSION["id"];
-                // $name = time() . "_" . $name;
-                if ($this->upload_file($tmp_name, "upload", $name) == 1) {
-                    $sql = "insert into uploadfile(id_account,tenfile,loaifile,uploadtime) values ('$idaccount','$filename_without_extension','$extension','$uploadTime')";
-                    $result = $this->themxoasua($sql);
-                    
+
+                if ($this->handeUploadfile($tmp_name, $name) == 1) {
+                    $url = "{$this->urlApi}/themFile.php?filename={$filename}&ext={$extension}&filepath={$this->accountFolder}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}";
+
+                    $result = $this->excuteApi($url);
+
                     if ($result != 1) {
                         $result = 0;
                     }
-                    echo '<script language="javascript">
-                    window.location="./index.php?message='.$result.'";
-                      </script>';
+                    
+                    $this->changeLocation('index', $result);
                 }
             } else {
-                echo "Session không tồn tại.";
+                $this->changeLocation('index', 99);
             }
         } else {
-            echo "Có lỗi xảy ra khi tải lên tập tin.";
+            $this->changeLocation('index', 0);
         }
     }
 
-    public function upload_file($tmp_name, $folder, $name)
+    public function handeUploadfile ($tmp_name, $name)
     {
-        if ($tmp_name != "" && $folder != "" && $name != "") {
-            $newname = $folder . "/" . $name;
-            if (move_uploaded_file($tmp_name, $newname)) {
+        $isCreate = $this->createFolder();
+
+        if($isCreate != -1)
+        {
+            $resultUpdate = $this->upload_file($tmp_name, $name);
+            return $resultUpdate;
+        } 
+
+        return $isCreate;
+    }
+
+    public function createFolder()
+    {
+        if(!file_exists($this->accountFolder))
+        {
+            mkdir($this->accountFolder);
+            return 1;
+        } else {
+            return 0;
+        }
+
+        return -1;
+    }
+
+    public function upload_file($tmp_name, $name)
+    {
+        if ($tmp_name != "" && $this->accountFolder != "" && $name != "") {
+            $filepath = $this->accountFolder . "/" . $name;
+
+            if (move_uploaded_file($tmp_name, $filepath)) {
                 return 1;
             } else {
                 return 0;
@@ -106,6 +146,29 @@ class clsXuLyFile extends connectDB
             return 0;
         }
     }
+
+    public function changeLocation ($file = 'default', $message=-520)
+    {
+        if($file != '' && $file != 'default')
+        {
+            $message = (int) $message;
+            if ($message === -520)
+            {
+                echo "<script language='javascript'>
+                    window.location='./{$file}.php';
+                </script>";
+            } else {
+                echo "<script language='javascript'>
+                        window.location='./{$file}.php?message={$message}';
+                  </script>";
+            }
+        } else {
+            echo '<script language="javascript">
+						window.location="/";
+				</script>';
+        }
+    }
+
     public function themxoasua($sql)
     {
         $link = $this->connectDB();
@@ -116,26 +179,26 @@ class clsXuLyFile extends connectDB
             return 0;
         }
     }
-    
-    public function getFilename ($sql) {
+
+    public function getFilename($sql)
+    {
         $conn = $this->connectDB();
         $result = mysqli_query($conn, $sql);
 
         $numrow = mysqli_num_rows($result);
 
-        if($numrow > 0)
-        {
+        if ($numrow > 0) {
             $fileName = mysqli_fetch_array($result);
-            $filePath = $fileName["tenfile"] . '.' . $fileName["loaifile"];
+            $filePath = $fileName["tenfile"] . "." . $fileName["loaifile"];
             return $filePath;
-        } else
-        {
+        } else {
             return 0;
         }
     }
+
     public function showFiles($url)
     {
-        $result=$this->readApi($url);
+        $result = $this->readApi($url);
         echo '<table class="table table-hover">
             <thead class="thead-light">
             <tr>
@@ -144,53 +207,75 @@ class clsXuLyFile extends connectDB
                 <th  scope="col">Loại</th>
                 <th  scope="col">Tải lên</th>
                 <th  scope="col">Chủ sỡ hữu</th>
+                <th  scope="col">Kích thước</th>
                 <th  scope="col">Thao tác</th>
                 </tr>
                 </thead>
             <tbody>';
         $stt = 1;
-        foreach ($result as $row) {
-            $id=$row->id;
-            $tenfile = $row->tenfile;
-            $loaifile = $row->loaifile;
-            $uploadtime = $row->uploadTime;
-            $ten = $row->ten;
-            echo '<tr>
-                <td scope="row">' .$stt .'</td>
-                <td>' . $tenfile . '</td>
-                <td>' . $loaifile . '</td>
-                <td>' . $uploadtime .'</td>
-                <td>' . $ten . '</td>
-                <td>
-                    <div>
-                        <a  href="#"><i class="fa fa-download action" aria-hidden="true"></i></a>
-                        <a  href="./delete_file.php?id='.$id.'"><i class="fa fa-trash action" aria-hidden="true"></i></a>
-                    </div>
-                </td>
-                </tr>';
-
-            $stt++;
+        if(!is_null($result))
+        {
+            foreach ($result as $row) {
+                $id = $row->id;
+                $tenfile = $row->tenfile;
+                $loaifile = $row->loaifile;
+                $uploadtime = $row->uploadTime;
+                $ten = $row->ten;
+                $size = $row->size;
+                $urlfile = "{$this->accountFolder}/{$tenfile}.{$loaifile}";
+                echo '<tr>
+                    <td scope="row">' .
+                    $stt .
+                    '</td>
+                    <td>' .
+                    $tenfile .
+                    '</td>
+                    <td>' .
+                    $loaifile .
+                    '</td>
+                    <td>' .
+                    $uploadtime .
+                    '</td>
+                    <td>' .
+                    $ten .
+                    '</td>
+                    <td>' .
+                    $size .
+                    '</td>
+                    <td>
+                        <div>                       
+                            <form action="" method="post">
+                                <input type="text" hidden name="idfile" value="' .$id .'">
+                                <input type="text" hidden name="urlfile" value="' . $urlfile .'">
+                                
+                                <button value="download" class="btnAction bg-transparent" name="btn"><i class="pri-color fa fa-download" aria-hidden="true"></i></button>
+                                <button value="delete" class="btnAction bg-transparent" name="btn"><i class="pri-color fa fa-trash" aria-hidden="true"></i></button>
+                            </form>
+                    </td>
+                    </tr>';
+    
+                $stt++;
+            }
         }
         echo '     
             </tbody>
             </table>';
     }
+    
     public function laycot($sql)
-	{
-		$link=$this->connectDB();
-		$ketqua=mysqli_query($link,$sql);
-		$i=mysqli_num_rows($ketqua);
-		$giatri="";
-		if($i>0)
-		{
-			while($row=mysqli_fetch_array($ketqua))
-			{
-				$giatri=$row[0];
-			}
-			return $giatri;
-		}
-		
-	}
+    {
+        $link = $this->connectDB();
+        $ketqua = mysqli_query($link, $sql);
+        $i = mysqli_num_rows($ketqua);
+        $giatri = "";
+        if ($i > 0) {
+            while ($row = mysqli_fetch_array($ketqua)) {
+                $giatri = $row[0];
+            }
+            return $giatri;
+        }
+    }
+    
     public function load_ds_nguoidung($sql)
     {
         $link = $this->connectDB();
@@ -209,7 +294,7 @@ class clsXuLyFile extends connectDB
 				<tbody>';
             $dem = 1;
             while ($row = mysqli_fetch_array($ketqua)) {
-                $id=$row['id'];
+                $id = $row["id"];
                 $ten = $row["ten"];
                 $sdt = $row["sdt"];
                 $email = $row["email"];
@@ -237,7 +322,41 @@ class clsXuLyFile extends connectDB
             echo " Không có dữ liệu";
         }
         mysqli_close($link);
-    }      
     }
+
+    public function deleteFile()
+    {
+        $idFileDel = $_SESSION['idFileDel'];
+        $idAccount = $_SESSION['id'];
+        $role = $_SESSION['phanquyen'];
+
+        $urlRead = $this->urlApi."/xem.php?idFile={$idFileDel}&idAccount={$idAccount}";
+        $urlDel = $this->urlApi."/xoa.php?idFile={$idFileDel}&idAccount={$idAccount}&role={$role}";
+        
+        $file = $this->readApi($urlRead)[0];
+        $filepath = $this->accountFolder . '/' . $file->tenfile .'.'. $file->loaifile;
+
+        if(unlink($filepath))
+        {
+            $resultDel = $this->excuteApi($urlDel);
+            if($resultDel == 1)
+            {
+                $this->changeLocation('index', 2);
+            } else {
+                $this->changeLocation('index', -2);
+            }
+        }
+        else
+        {
+            $this->changeLocation('index', -2);
+        }
+    }
+
+    public function downloadFile($urlfile)
+    {
+        header("Content-Disposition: attachment; filename={$urlfile}");
+        readfile($urlfile);
+    }
+}
 
 ?>

@@ -1,11 +1,5 @@
-from flask import Flask, jsonify, request
-import re #Xoá các dòng comment /**/ trong file php
-import os #Chạy lấy toàn bộ file
-import math #Tính toán information entropy
+from flask import Flask, request
 import pandas as pd #Thao tác tạo file csv theo cấu trúc
-import numpy as np
-import pickle
-from collections import Counter #Đếm số lượng từ xuất hiện trong file
 import utils
 import json
 
@@ -35,7 +29,7 @@ def _predict():
     F14 = []
     F15 = []
     F16 = []
-    class_att = []
+    
     def_arr = ['eval']
     faf_arr = ['wget', 'curl', 'lynx', 'get', 'fetch']
     rcf_arr = ['perl', 'python', 'gcc', 'chmod', 'nohup', 'nc ']

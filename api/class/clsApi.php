@@ -45,8 +45,9 @@
                     $loaifile = $row['loaifile'];
                     $uploadtime = $row['uploadtime'];
                     $ten = $row['ten'];
+                    $size = $row['sizeofFile'];
 
-                    $data[] = array("id" => $id, "tenfile" => $tenfile, "loaifile" => $loaifile, "id-account" => $idAccount, "uploadTime" => $uploadtime, "ten" =>$ten);
+                    $data[] = array("id" => $id, "tenfile" => $tenfile, "loaifile" => $loaifile, "id-account" => $idAccount, "uploadTime" => $uploadtime, "ten" => $ten, "size" => $size);
                 }
 
                 header('content-Type:application/json; charset=UTF-8');
@@ -61,13 +62,46 @@
         public function apiXuLyFile ($sql)
         {
             $conn = $this->connectDB();
-            
+            $result = 0;
+
             if (mysqli_query($conn, $sql))
             {
-                return 1;
-            } else {
-                return 0;
+                $result = 1;
             }
+            
+            $respone = array("result" => $result);
+
+            header('content-Type: application/json; charset=UTF-8');
+            echo json_encode($respone);
+        }
+
+        public function apiTimKiem($sql)
+        {
+            $conn = $this->connectDB();
+            $result = mysqli_query($conn, $sql);
+            $numrow = mysqli_num_rows($result);
+
+            if ($numrow > 0)
+            {
+                $data=array();
+                while ($row = mysqli_fetch_array($result))
+                {
+                    $id = $row['id'];
+                    $idAccount = $row['id_account'];
+                    $tenfile = $row['tenfile'];
+                    $loaifile = $row['loaifile'];
+                    $uploadtime = $row['uploadtime'];
+                    $ten = $row['ten'];
+
+                    $data[] = array("id" => $id, "tenfile" => $tenfile, "loaifile" => $loaifile, "id-account" => $idAccount, "uploadTime" => $uploadtime, "ten" =>$ten);
+                }
+
+                header('content-Type:application/json; charset=UTF-8');
+                echo json_encode($data);
+            }else{
+                echo 'Không có kết quả';
+            }
+            $this->closeConnectDB($conn);
         }
     }
 ?>

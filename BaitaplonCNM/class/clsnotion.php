@@ -7,7 +7,6 @@
             {
                 case 1:
                     {
-
                         $this->uploadSuccess();
                         break;
                     } 
@@ -31,6 +30,11 @@
                         $this->delFileFail();
                         break;
                     } 
+                case 3:
+                    {
+                        $this->delFileAccept();
+                        break;
+                    }
                 default:
                     {
                         $this->defaultError();
@@ -52,14 +56,11 @@
             echo "
             <div class='modal fade' id='resultModal' role='dialog' aria-label='resultModalLabel'  aria-hidden='true'>
                 <div class='modal-dialog modal-dialog-centered'>
-                    <div class='modal-content'>
-                    <div class='modal-body text-center'>
-                        <div class='icon-status mt-2 p-5'>";
+                    <div class='modal-content min-h-65'>
+                        <div class='modal-body text-center'>";
             $this->showNotion($mess);            
-            echo "            
+            echo "
                         </div>
-                        <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
-                    </div>
                     </div>
                 </div>
             </div>";
@@ -67,38 +68,88 @@
 
         private function uploadSuccess ()
         {
-            echo '<i class="far fa-check-circle text-success mb-3"></i></br>';
-            echo '<h3 class="text-success">Upload file thành công<h3>';
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-check-circle text-success mb-3'></i></br>
+                    <h3 class='text-success'>Upload file thành công<h3></h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
         }
 
         private function uploadFail ()
         {
-            echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-            echo '<h3 class="text-danger">Upload file thất bại</h3>';
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Upload file thất bại</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
         }
 
         private function uploadFileIsWebshell ()
         {
-            echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-            echo '<h3 class="text-danger">Upload file thất bại! </br>File của bạn có thể chứa webshell</h3>';
+          
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Upload file thất bại! </br>File của bạn có thể chứa webshell</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
         }
 
         private function delFileSuccess ()
         {
-            echo '<i class="far fa-check-circle text-success mb-3"></i></br>';
-            echo '<h3 class="text-danger">Xoá file thành công!</h3>';
+                $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-check-circle text-success mb-3'></i></br>
+                    <h3 class='text-success'>Xoá file thành công!</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
         }
 
         private function delFileFail ()
         {
-            echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-            echo '<h3 class="text-danger">Xoá file không thành công</h3>';
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Xoá file không thành công</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
+        }
+        
+        private function delFileAccept ()
+        {
+            $render = "
+                <form method='POST' style='margin-top: 65px'>
+                    <h5>Bạn có chắc chắn xóa file này không ?</h5></br>
+                    
+                    <button type='submit' class='btn btn-accept mb-3 mr-3' name='btn' value='btn-del-yes'>Có</button>
+                    <button type='submit' class='btn bg-light mb-3' name='btn' value='btn-del-no'>Không</button>
+                </form>
+            ";
+            echo $render;
         }
 
         private function defaultError ()
         {
-            echo '<i class="far fa-times-circle text-danger mb-3"></i></br>';
-            echo '<h3 class="text-danger">Lỗi hệ thống!</h3>';
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Lỗi hệ thống!</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
         }
     }
 ?>

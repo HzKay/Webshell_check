@@ -9,7 +9,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['ten']) && isset($_SESSION['passwor
     if($_SESSION['phanquyen']!=1)
     {
       echo '<script language="javascript">
-					alert("Bạn cần tạo tài khoản để sử dụng trang này!!");
+					alert("Tài khoản admin không thể sử dụng trang này !");
 						</script>';
 		echo '<script language="javascript">
 				window.location="./singup.php";
@@ -69,11 +69,12 @@ else
           <div class="col-lg-7 col-xs-12 m-2" >
            <div class="search-box pull-right">
               <form action="" method="POST" id="search_mini_form" name="Categories">
-                <input type="text" placeholder="Search entire store here..." maxlength="70" name="search" id="search">
+                <input type="text" placeholder="Tìm kiếm file" name="search" id="search">
                 <button type="button" class="search-btn-bg" style="float:right; padding:4px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
               </form>
             </div>
           </div>
+          
           <div class="col-sm-2 col-xs-12">
               <div class="dropdown">
                   <button type="button" class="btn user" data-toggle="dropdown">
@@ -124,7 +125,7 @@ else
                       <div class="table-file">
                         <form name="form1" method="post" action="" >
                         <?php
-                          $xuLyFile->showFiles("http://localhost/Webshell_check/api/xem.php?id={$_SESSION['id']}");
+                          $xuLyFile->showFiles("http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}");
                         ?>
                         </form>
                       </div>
@@ -148,6 +149,27 @@ if (isset($_REQUEST['btn']))
     case 'UPLOAD':
     {
       $xuLyFile->xuLyLuuFile();
+      break;
+    }
+    case 'delete':
+    {
+      $_SESSION['idFileDel'] = $_REQUEST['idfile'];
+      $xuLyFile->changeLocation('index', 3);
+      break;
+    }
+    case 'btn-del-yes':
+    {
+      $xuLyFile->deleteFile();
+      break;
+    }
+    case 'btn-del-no':
+    {
+      $xuLyFile->changeLocation('index');
+			break;
+    }
+    case 'download':
+    {
+      $xuLyFile->downloadFile($urlfile);
       break;
     }
   }
