@@ -15,9 +15,17 @@
                     $extension = $_REQUEST['ext'];
                     $filepath = $_REQUEST['filepath'];
                     $size = $_REQUEST['size'];
+                    $idFile = $_REQUEST['idFile'];
                     
-                    $sql = "INSERT INTO uploadfile (id_account, tenfile, loaifile, filepath, sizeofFile) 
-                            VALUES ($id_account,'$filename','$extension', '$filepath', $size)";
+                    $sql = "UPDATE uploadfile 
+                            SET id_account = '$id_account', 
+                                tenfile = '$filename', 
+                                loaifile = '$extension', 
+                                uploadtime = NOW(),
+                                filepath = '$filepath', 
+                                sizeofFile = $size
+                            WHERE id = {$idFile}
+                            ";
                     $api->apiXuLyFile($sql);
                     break;
                 }

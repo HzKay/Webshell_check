@@ -62,7 +62,7 @@ ob_end_flush();
 <body>
 <div  style="width:100%">
 	<div class="header">
-       <div class="row">
+       <div class="row align-items-center">
           <div class="col-sm-2 col-xs-12"> 
             <!-- Header Logo -->
             <div class=" title"><a title="logo" href="index.php"><h4 class="h4">UPLOAD</h4></a></div>
@@ -71,7 +71,7 @@ ob_end_flush();
           <div class="col-lg-7 col-xs-12 m-2" >
            <div class="search-box pull-right">
               <form action="" method="POST" id="search_mini_form" name="Categories">
-                <input type="text" placeholder="Tìm kiếm file" name="txtsearch" id="search">
+                <input type="text" placeholder="Tìm kiếm file" name="txtsearch" id="search" value="<?php if(isset($_REQUEST['content'])) { echo $_REQUEST['content'];}?>">
                 <button type="submit" class="search-btn-bg" name="btn" value="search" style="float:right; padding:4px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
               </form>
             </div>

@@ -35,6 +35,11 @@
                         $this->delFileAccept();
                         break;
                     }
+                case 4:
+                    {
+                        $this->updateFileAccept();
+                        break;
+                    }
                 default:
                     {
                         $this->defaultError();
@@ -135,6 +140,19 @@
                     
                     <button type='submit' class='btn btn-accept mb-3 mr-3' name='btn' value='btn-del-yes'>Có</button>
                     <button type='submit' class='btn bg-light mb-3' name='btn' value='btn-del-no'>Không</button>
+                </form>
+            ";
+            echo $render;
+        }
+
+        private function updateFileAccept ()
+        {
+            $render = "
+                <form method='POST' style='margin-top: 65px'>
+                    <h5>File đã tồn tại! Bạn có muốn cập nhật lại không</h5></br>
+                    
+                    <button type='submit' class='btn btn-accept mb-3 mr-3' name='btn' value='btn-update-yes'>Có</button>
+                    <button type='submit' class='btn bg-light mb-3' name='btn' value='btn-update-no'>Không</button>
                 </form>
             ";
             echo $render;

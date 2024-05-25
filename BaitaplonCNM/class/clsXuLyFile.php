@@ -49,6 +49,9 @@ class clsXuLyFile extends handleApi
     
     public function luuFile()
     {
+        include_once("clsnotion.php");
+        $notion = new notionStatus();
+
         if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
             // Lấy thông tin về tập tin
             $name = $_FILES["file"]["name"];
@@ -57,13 +60,24 @@ class clsXuLyFile extends handleApi
             $size = $_FILES['file']['size'];
             $temp = explode(".", $name);
             $extension = end($temp);
-
+            $filepath = $_SESSION['accountFolder'] . '/' . $name;
+            
             // Kiểm tra xem phiên đã được khởi động trước khi sử dụng biến $_SESSION
             if (isset($_SESSION["id"])) {
                 $idaccount = $_SESSION["id"];
+                $fileExist = false;
+                if (file_exists($filepath) && is_file($filepath)) {
+                    $fileExist = true;
+                } 
 
                 if ($this->handeUploadfile($tmp_name, $name) == 1) {
-                    $url = "{$this->urlApi}/themFile.php?filename={$filename}&ext={$extension}&filepath={$_SESSION['accountFolder']}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}";
+                    if($fileExist)
+                    {
+                        $idFile = $this->getIdFile($filename, $idaccount);
+                        $url = "{$this->urlApi}/sua.php?filename={$filename}&ext={$extension}&filepath={$_SESSION['accountFolder']}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}&idFile={$idFile}";
+                    } else {
+                        $url = "{$this->urlApi}/themFile.php?filename={$filename}&ext={$extension}&filepath={$_SESSION['accountFolder']}&idAccount={$idaccount}&role={$_SESSION['phanquyen']}&size={$size}";
+                    }
 
                     $result = $this->excuteApi($url);
 
@@ -79,6 +93,18 @@ class clsXuLyFile extends handleApi
         } else {
             $this->changeLocation('index.php', 0);
         }
+    }
+
+    public function getIdFile($name, $idAccount)
+    {
+        $url = "http://localhost/Webshell_check/api/getIdFile.php?name={$name}&idAccount={$idAccount}";
+        $result = $this->excuteApi($url);
+        
+        if (!is_null($result))
+        {
+            return $result;
+        }
+        return -1;
     }
 
     public function handeUploadfile ($tmp_name, $name)
@@ -111,7 +137,7 @@ class clsXuLyFile extends handleApi
     {
         if ($tmp_name != "" && $_SESSION['accountFolder'] != "" && $name != "") {
             $filepath = $_SESSION['accountFolder'] . "/" . $name;
-
+            
             if (move_uploaded_file($tmp_name, $filepath)) {
                 return 1;
             } else {

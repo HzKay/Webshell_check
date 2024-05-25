@@ -69,32 +69,40 @@ else
 </head>
 
 <body>
-	<div class="container">
+	<div class="content-box">
 		<div class="row">
 			<div class="col-lg-3 content text-center">
-				<div class="logo">
-				<i class="fa fa-user-circle user" aria-hidden="true"></i>
-				<span class="title">ADMIN</span>
-				</div> 
+				<a href="index.php">
+					<div class="logo">
+						<i class="fa fa-user-circle user" aria-hidden="true"></i>
+						<span class="title">ADMIN</span>
+					</div> 
+				</a>
 			</div>
 			<div class="col-lg-9 aside">
 				<div class="row">
-					<div class="col-sm-1">
-					   <i class="fa fa-bars icon-bar" aria-hidden="true"></i>
-					</div>
-                    <div class="col-sm-4 search-box pull-right">
-					<form action="" method="POST" id="search_mini_form" name="Categories">
-						<input type="text" placeholder="Search entire store here..." maxlength="100" name="search" id="search">
-						<button type="button" class="search-btn-bg" style="float:right; padding:4px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
-					</form>
-					</div>
-					<div class="col-sm-4">
-					<form action="" method="post">
-						<i class="fa fa-bell thongbao" aria-hidden="true"></i>
-						<i class="fa fa-comments comment" aria-hidden="true"></i>
-                       <input type="submit" name="btn" class="btn btn-block btn-logout" value="Đăng xuất">
-                    </form>
-					</div>
+                    <div class="col-lg-10 col-xs-12 m-2" >
+						<div class="search-box pull-right">
+							<form action="" method="POST" id="search_mini_form" name="Categories">
+								<input type="text" placeholder="Tìm kiếm file" name="txtsearch" id="search" value="<?php if(isset($_REQUEST['content'])) { echo $_REQUEST['content'];}?>">
+								<button type="submit" class="search-btn-bg" name="btn" value="search" style="float:right; padding: 12px 40px;"><span class="glyphicon glyphicon-search"><i class="fa fa-search" aria-hidden="true"></i></span></button>
+							</form>
+							</div>
+						</div>
+						
+						<div class="col-sm-1 col-xs-12">
+							<div class="dropdown">
+								<button type="button" class="btn user" data-toggle="dropdown">
+								<span class="float-right glyphicon glyphicon-search "><i class="fa fa-bars icon-bar"></i></span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-right mt-2">
+									<p class="username text-center"><?php echo $_SESSION['ten']?></p>
+									<form action="" method="post">
+									<input type="submit" name="btn" class="btn btn-block btn-logout" value="Đăng xuất">
+									</form>
+								</div>
+							</div>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -102,9 +110,9 @@ else
 			<div class="col-lg-3 menu p-0">
 				<nav>
 				<ul id="nav" class="nav nav-pills flex-column" role="tablist"> 
-				<li class="nav-item">
-					<a href="#dsfile" class="nav-link active" data-toggle="pill"><i class="fa fa-home mr-2" aria-hidden="true"></i>Trang chủ</a>
-				</li>
+					<li class="nav-item">
+						<a href="#dsfile" class="nav-link active" data-toggle="pill"><i class="fa fa-home mr-2" aria-hidden="true"></i>Trang chủ</a>
+					</li>
 					<li class="nav-item">
 						<a href="#tailen" class="nav-link" data-toggle="pill"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Cấu hình</a>
 					</li>
@@ -113,53 +121,108 @@ else
 			</div>
 			<div class="col-lg-9 home pt-2">
 			<div class="tab-content">
-			  <div id="dsfile" class="container tab-pane active">
-				<h4>Trang chủ</h4>
-				<div id="dashboard" class="color1">
-					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("user"); ?></h2>
-						<h5 class="pl-3 pt-1">NGƯỜI DÙNG</h5>
+			  <div id="dsfile" class="container tab-pane active <?php if(isset($_REQUEST['content'])) {echo 'del';}?>">
+				<div class="space">
+					<h4 class="title-tab">Trang chủ</h4>
+					<div class="dashboard-box">
+						<div id="dashboard" class="color1">
+							<div class="float-left">
+								<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("user"); ?></h2>
+								<h5 class="pl-3 pt-1">NGƯỜI DÙNG</h5>
+							</div>
+							<div class="float-right pr-3 pt-3">
+								<i class="fa fa-user-plus icon-user" aria-hidden="true"></i>
+							</div>
+							<form action="" method="post" enctype="multipart/form-data">
+							<button type="submit" class="btn btn-load mt-2" value="người dùng" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+							</form>
+						</div>
+						<div id="dashboard" class="color2">
+							<div class="float-left">
+								<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("file"); ?></h2>
+								<h5 class="pl-3 pt-1">FILE UPLOAD</h5>
+							</div>
+							<div class="float-right pr-3 pt-3">
+							<i class="fa fa-cloud-upload icon-user" aria-hidden="true"></i>
+							</div>
+							<form action="" method="post" enctype="multipart/form-data">
+							<button type="submit" class="btn btn-load mt-2" value="file upload" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+							</form>
+						</div>
+						<div id="dashboard" class="color3">
+							<div class="float-left">
+								<h2 class="pl-3 pt-2">
+									<?php 
+										$totalsize = $admin->getOverview('size'); 
+										$totalsize = $admin->showSize($totalsize);
+										echo $totalsize;
+									?>
+								</h2>
+								<h5 class="pl-3 pt-1">KÍCH THƯỚC</h5>
+							</div>
+							<div class="float-right pr-3 pt-3">
+							<i class="fa fa-bar-chart icon-user" aria-hidden="true"></i>
+							</div>
+							<form action="" method="post" enctype="multipart/form-data">
+							<button type="submit" class="btn btn-load mt-2" value="kích thước" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
+							</form>
+						</div>
 					</div>
-					<div class="float-left pl-5 pt-3">
-						<i class="fa fa-user-plus icon-user" aria-hidden="true"></i>
-					</div>
-					<form action="" method="post" enctype="multipart/form-data">
-					<button type="submit" class="btn btn-load mt-2" value="người dùng" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
-					</form>
 				</div>
-				<div id="dashboard" class="color2">
-					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("file"); ?></h2>
-						<h5 class="pl-3 pt-1">FILE UPLOAD</h5>
-					</div>
-					<div class="float-left pl-5 pt-3">
-					<i class="fa fa-bar-chart icon-user" aria-hidden="true"></i>
-					</div>
-					<form action="" method="post" enctype="multipart/form-data">
-					<button type="submit" class="btn btn-load mt-2" value="file upload" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
-					</form>
+				<div class="listFiles">
+					<?php
+					if(isset($_REQUEST['content']))
+					{
+						echo "<h4 class='h4 text-center mb-3'>DANH SÁCH FILE</h4>";
+						$search = $_REQUEST['content'];
+						$url = "http://localhost/Webshell_check/api/timKiem.php?search={$search}&idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+						$xuLyFile->showFiles($url);
+					}
+					?>
 				</div>
-				<div id="dashboard" class="color3">
-					<div class="float-left">
-						<h2 class="pl-3 pt-2">
-							<?php 
-								$totalsize = $admin->getOverview('size'); 
-								$totalsize = $admin->showSize($totalsize);
-								echo $totalsize;
-							?>
-						</h2>
-						<h5 class="pl-3 pt-1">KÍCH THƯỚC</h5>
-					</div>
-					<div class="float-left pl-5 pt-3">
-					<i class="fa fa-bar-chart icon-user" aria-hidden="true"></i>
-					</div>
-					<form action="" method="post" enctype="multipart/form-data">
-					<button type="submit" class="btn btn-load mt-2" value="kích thước" name="btn">Chi tiết <i class="fa fa-plus" aria-hidden="true"></i></button>
-					</form>
+				<div id="showinfo">
+					<?php
+					if(isset($_REQUEST['btn']))
+					{
+						switch($_REQUEST['btn'])
+						{
+							case 'người dùng':
+							{
+								$url = "http://localhost/Webshell_check/api/getUserList.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+								$admin->showUserList($url);
+								break;
+							}
+							case 'file upload':
+							{
+								$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+								$xuLyFile->showFiles($url);
+								break;
+							}
+							case 'kích thước':
+							{
+								$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+								$xuLyFile->showFiles($url);
+								break;
+							}
+							case 'search':
+							{
+								$searchContent = $_REQUEST['txtsearch'];
+								$xuLyFile->changeLocation("index.php?content={$searchContent}");
+								break;
+							}
+							case 'Đăng xuất':
+							{
+								session_unset();
+								session_destroy();
+								echo "<script>window.location.replace('login.php')</script>";
+							}
+						}
+					}
+					?>
 				</div>
 			  </div>
 			  <div id="tailen" class="container tab-pane fade">
-				 <h4>Cấu hình</h4>
+				 <h4 class="title-tab">Cấu hình</h4>
 				 <div class="form-cauhinh">
 				 <form id="form1" name="form1" method="post" action="">
 						<table width="926" border="1" align="center" cellpadding="5" cellspacing="0" class="table table-bordered">
@@ -215,40 +278,6 @@ else
 					</form>
 				 </div>
 			  </div>
-			</div>
-			<div class="row" style="padding-top:20px;">
-				<?php
-				if(isset($_REQUEST['btn']))
-				{
-					switch($_REQUEST['btn'])
-					{
-						case 'người dùng':
-						{
-							$url = "http://localhost/Webshell_check/api/getUserList.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
-							$admin->showUserList($url);
-							break;
-						}
-						case 'file upload':
-						{
-							$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
-							$xuLyFile->showFiles($url);
-							break;
-						}
-						case 'kích thước':
-						{
-							$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
-							$xuLyFile->showFiles($url);
-							break;
-						}
-						case 'Đăng xuất':
-						{
-							session_unset();
-							session_destroy();
-							echo "<script>window.location.replace('login.php')</script>";
-						}
-					}
-				}
-				?>
 			</div>
 		</div>
 		</div>
