@@ -8,13 +8,13 @@ $p=new dangnhap();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Login</title>
-<link rel="stylesheet" href="Font awesome/css/fontawesome.css">
-<link rel="stylesheet" href="Font awesome/css/brands.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/regular.css">
-<link rel="stylesheet" href="Font awesome/css/solid.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/svg-with-js.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/v4-shims.css">
-<link rel="stylesheet" href="Font awesome/css/all.css">
+<link rel="stylesheet" href="./Font_awesome/css/fontawesome.css">
+<link rel="stylesheet" href="./Font_awesome/css/brands.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/regular.css">
+<link rel="stylesheet" href="./Font_awesome/css/solid.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/svg-with-js.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/v4-shims.css">
+<link rel="stylesheet" href="./Font_awesome/css/all.css">
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
 <script type="text/javascript" src="js/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>

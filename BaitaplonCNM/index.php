@@ -35,13 +35,13 @@ ob_end_flush();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trang chủ</title>
-<link rel="stylesheet" type="text/css" href="Font awesome/css/fontawesome.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/brands.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/regular.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/solid.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/svg-with-js.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/v4-shims.css">
-<link rel="stylesheet" type="text/css" href="Font awesome/css/all.min.css"/>
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/fontawesome.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/brands.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/regular.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/solid.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/svg-with-js.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/v4-shims.css">
+<link rel="stylesheet" type="text/css" href="./Font_awesome/css/all.min.css"/>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <script src="js/jquery-3.6.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>

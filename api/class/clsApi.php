@@ -104,5 +104,74 @@
             }
             $this->closeConnectDB($conn);
         }
+
+        public function apiDataCol($sql)
+        {
+            $conn = $this->connectDB();
+            $result = mysqli_query($conn, $sql);
+            $numrow = mysqli_num_rows($result);
+            $temp = 0;
+
+            if($numrow > 0)
+            {
+                while($row = mysqli_fetch_array($result))
+                {
+                    $temp = $row['result'];
+                }
+            }
+
+            $respone = array('result' => $temp);
+            
+            header('content-Type:application/json; charset=UTF-8');
+            echo json_encode($respone);
+            $this->closeConnectDB($conn);
+        }
+        
+        public function authenRole($sql)
+        {
+            $conn = $this->connectDB();
+            $result = mysqli_query($conn, $sql);
+            $numrow = mysqli_num_rows($result);
+            $temp = 0;
+
+            if($numrow > 0)
+            {
+                while($row = mysqli_fetch_array($result))
+                {
+                    $temp = $row['result'];
+                }
+            }
+
+            return $temp;
+        }
+
+        public function getUserList($sql)
+        {
+            $conn = $this->connectDB();
+            $result = mysqli_query($conn, $sql);
+
+            $numrow = mysqli_num_rows($result);
+            
+            if ($numrow > 0)
+            {
+                $data = array();
+                while ($row = mysqli_fetch_array($result))
+                {
+                    $id = $row['id'];
+                    $ten = $row['ten'];
+                    $sdt = $row['sdt'];
+                    $email = $row['email'];
+
+                    $data[] = array("id" => $id, "ten" => $ten, "sdt" => $sdt, "email" => $email);
+                }
+                
+                header('content-Type:application/json; charset=UTF-8');
+                echo json_encode($data);
+            } else {
+                echo 'CSDL đang cập nhật';
+            }
+
+            $this->closeConnectDB($conn);
+        }
     }
 ?>

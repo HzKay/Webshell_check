@@ -1,28 +1,9 @@
 <?php
-include_once "connect.php";
-// include_once("class/clsHandleApi.php");
-class clsXuLyFile extends connectDB
+include_once("clsHandleApi.php");
+class clsXuLyFile extends handleApi
 {
     private $urlApi = "http://localhost/Webshell_check/api";
-
-
-    private function readApi($url)
-    {
-        $client = curl_init($url);
-        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
-        $respone = curl_exec($client);
-        $result = json_decode($respone);
-        return $result;
-    }
-
-    private function excuteApi($url)
-    {
-        $client = curl_init($url);
-        curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
-        $respone = curl_exec($client);
-        $result = json_decode($respone)->result;
-        return $result;
-    }
+    private $host = "";
 
     public function xuLyLuuFile()
     {
@@ -163,33 +144,6 @@ class clsXuLyFile extends connectDB
         }
     }
 
-    public function themxoasua($sql)
-    {
-        $link = $this->connectDB();
-        $kq = mysqli_query($link, $sql);
-        if ($kq) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public function getFilename($sql)
-    {
-        $conn = $this->connectDB();
-        $result = mysqli_query($conn, $sql);
-
-        $numrow = mysqli_num_rows($result);
-
-        if ($numrow > 0) {
-            $fileName = mysqli_fetch_array($result);
-            $filePath = $fileName["tenfile"] . "." . $fileName["loaifile"];
-            return $filePath;
-        } else {
-            return 0;
-        }
-    }
-
     public function showFiles($url)
     {
         $result = $this->readApi($url);
@@ -228,7 +182,7 @@ class clsXuLyFile extends connectDB
                         <div>                       
                             <form action="" method="post">
                                 <input type="text" hidden name="idfile" value="' .$id .'">
-                                <input type="text" hidden name="urlfile" value="' . $urlfile .'">
+                                <input type="text" hidden name="urlfile" value="' . $this->host . $urlfile .'">
                                 
                                 <button value="download" class="btnAction bg-transparent" name="btn"><i class="pri-color fa fa-download" aria-hidden="true"></i></button>
                                 <button value="delete" class="btnAction bg-transparent" name="btn"><i class="pri-color fa fa-trash" aria-hidden="true"></i></button>
@@ -261,68 +215,6 @@ class clsXuLyFile extends connectDB
         } else {
             return '0 KB';
         }
-    }
-
-    public function laycot($sql)
-    {
-        $link = $this->connectDB();
-        $ketqua = mysqli_query($link, $sql);
-        $i = mysqli_num_rows($ketqua);
-        $giatri = "";
-        if ($i > 0) {
-            while ($row = mysqli_fetch_array($ketqua)) {
-                $giatri = $row[0];
-            }
-            return $giatri;
-        }
-    }
-    
-    public function load_ds_nguoidung($sql)
-    {
-        $link = $this->connectDB();
-        $ketqua = mysqli_query($link, $sql);
-        $i = mysqli_num_rows($ketqua);
-        if ($i > 0) {
-            echo '<table class="table table-hover pt-2">
-				<thead class="thead-light">
-				<tr>
-					<th  scope="col">STT</th>
-					<th  scope="col">Name</th>
-					<th  scope="col">Phone</th>
-					<th  scope="col">Email</th>
-				</tr>
-				</thead>
-				<tbody>';
-            $dem = 1;
-            while ($row = mysqli_fetch_array($ketqua)) {
-                $id = $row["id"];
-                $ten = $row["ten"];
-                $sdt = $row["sdt"];
-                $email = $row["email"];
-                echo '<tr>
-					<td scope="row">' .
-                    $dem .
-                    '</td>
-					<td>' .
-                    $ten .
-                    '</td>
-					<td>' .
-                    $sdt .
-                    '</td>
-					<td>' .
-                    $email .
-                    '</td>
-				  </tr>';
-
-                $dem++;
-            }
-            echo '     
-				</tbody>
-				</table>';
-        } else {
-            echo " Không có dữ liệu";
-        }
-        mysqli_close($link);
     }
 
     public function deleteFile()

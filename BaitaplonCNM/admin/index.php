@@ -8,7 +8,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['ten']) && isset($_SESSION['passwor
 	{
 		$p->confirmlogin($_SESSION['id'],$_SESSION['ten'],$_SESSION['password'],$_SESSION['phanquyen']);
 		include_once("../class/clsXuLyFile.php");
+		include_once("../class/clsAdmin.php");
+		
 		$xuLyFile = new clsXuLyFile();
+		$admin = new clsAdmin();
 	}
 	else
 	{
@@ -32,13 +35,13 @@ else
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Admin</title>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/fontawesome.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/brands.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/regular.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/solid.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/svg-with-js.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/v4-shims.css">
-<link rel="stylesheet" type="text/css" href="../Font awesome/css/all.min.css"/>
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/fontawesome.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/brands.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/regular.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/solid.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/svg-with-js.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/v4-shims.css">
+<link rel="stylesheet" type="text/css" href=".././Font_awesome/css/all.min.css"/>
 <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
 <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -114,7 +117,7 @@ else
 				<h4>Trang chủ</h4>
 				<div id="dashboard" class="color1">
 					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $xuLyFile->laycot("select count(id) from account where phanquyen=1"); ?></h2>
+						<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("user"); ?></h2>
 						<h5 class="pl-3 pt-1">NGƯỜI DÙNG</h5>
 					</div>
 					<div class="float-left pl-5 pt-3">
@@ -126,7 +129,7 @@ else
 				</div>
 				<div id="dashboard" class="color2">
 					<div class="float-left">
-						<h2 class="pl-3 pt-2"><?php echo $xuLyFile->laycot("select count(id) from uploadfile"); ?></h2>
+						<h2 class="pl-3 pt-2"><?php echo $admin->getOverview("file"); ?></h2>
 						<h5 class="pl-3 pt-1">FILE UPLOAD</h5>
 					</div>
 					<div class="float-left pl-5 pt-3">
@@ -138,7 +141,13 @@ else
 				</div>
 				<div id="dashboard" class="color3">
 					<div class="float-left">
-						<h2 class="pl-3 pt-2">56</h2>
+						<h2 class="pl-3 pt-2">
+							<?php 
+								$totalsize = $admin->getOverview('size'); 
+								$totalsize = $admin->showSize($totalsize);
+								echo $totalsize;
+							?>
+						</h2>
 						<h5 class="pl-3 pt-1">KÍCH THƯỚC</h5>
 					</div>
 					<div class="float-left pl-5 pt-3">
@@ -215,12 +224,20 @@ else
 					{
 						case 'người dùng':
 						{
-							$xuLyFile->load_ds_nguoidung("select*from account where phanquyen=1");
+							$url = "http://localhost/Webshell_check/api/getUserList.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+							$admin->showUserList($url);
 							break;
 						}
 						case 'file upload':
 						{
-							$xuLyFile->showFiles("select u.id,u.tenfile,u.loaifile,u.uploadtime,a.ten from account a join uploadfile u on a.id=u.id_account");
+							$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+							$xuLyFile->showFiles($url);
+							break;
+						}
+						case 'kích thước':
+						{
+							$url = "http://localhost/Webshell_check/api/xem.php?idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+							$xuLyFile->showFiles($url);
 							break;
 						}
 						case 'Đăng xuất':

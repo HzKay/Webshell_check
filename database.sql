@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 -- Dumping data for table baitaploncnm.account: ~0 rows (approximately)
 INSERT INTO `account` (`id`, `ten`, `password`, `phanquyen`, `sdt`, `email`) VALUES
-	(1, 'Thien', '7ece99e593ff5dd200e2b9233d9ba654', 2, '0366799876', 'thien2002@gmail.com'),
+	(1, 'Thien', '4de93544234adffbb681ed60ffcfb941', 2, '0366799876', 'thien2002@gmail.com'),
 	(2, 'admin', '4de93544234adffbb681ed60ffcfb941', 1, '0123456789', 'admin@gmail.com'),
 	(3, 'khachHang', 'b9bc4dd06b7d2d49cb9fb3d8d9fba6c1', 1, '0366799879', 'thien@gmail.com');
 
@@ -43,12 +43,12 @@ CREATE TABLE IF NOT EXISTS `uploadfile` (
   PRIMARY KEY (`id`),
   KEY `FK__account` (`id_account`),
   CONSTRAINT `FK__account` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table baitaploncnm.uploadfile: ~19 rows (approximately)
 INSERT INTO `uploadfile` (`id`, `id_account`, `tenfile`, `loaifile`, `uploadtime`, `filepath`, `sizeofFile`) VALUES
-	(12, 2, 'mMucTieuThang', 'php', '2024-05-24 20:38:01', 'upload/2_admin', 2284),
-	(13, 3, 'cDieuBietOn', 'php', '2024-05-24 20:40:02', 'upload/3_khachHang', 2020);
+	(13, 3, 'cDieuBietOn', 'php', '2024-05-24 20:40:02', 'upload/3_khachHang', 2020),
+	(14, 2, 'mMucTieuThang', 'php', '2024-05-24 23:46:49', 'upload/2_admin', 2284);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

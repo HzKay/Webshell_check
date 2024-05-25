@@ -1,7 +1,7 @@
 <?php
     class handleApi
     {
-        private function readApi ($url)
+        public function readApi($url)
         {
             $client = curl_init($url);
             curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
@@ -10,10 +10,13 @@
             return $result;
         }
 
-        public function sendApi ()
+        public function excuteApi($url)
         {
-            
+            $client = curl_init($url);
+            curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);
+            $respone = curl_exec($client);
+            $result = json_decode($respone)->result;
+            return $result;
         }
-        
     }
 ?>
