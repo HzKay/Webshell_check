@@ -43,12 +43,9 @@ CREATE TABLE IF NOT EXISTS `uploadfile` (
   PRIMARY KEY (`id`),
   KEY `FK__account` (`id_account`),
   CONSTRAINT `FK__account` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table baitaploncnm.uploadfile: ~19 rows (approximately)
-INSERT INTO `uploadfile` (`id`, `id_account`, `tenfile`, `loaifile`, `uploadtime`, `filepath`, `sizeofFile`) VALUES
-	(13, 3, 'cDieuBietOn', 'php', '2024-05-24 20:40:02', 'upload/3_khachHang', 2020),
-	(14, 2, 'mMucTieuThang', 'php', '2024-05-24 23:46:49', 'upload/2_admin', 2284);
+-- Dumping data for table baitaploncnm.uploadfile: ~5 rows (approximately)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

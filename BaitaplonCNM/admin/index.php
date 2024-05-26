@@ -71,7 +71,7 @@ else
 <body>
 	<div class="content-box">
 		<div class="row">
-			<div class="col-lg-3 content text-center">
+			<div class="col-lg-2 content text-center">
 				<a href="index.php">
 					<div class="logo">
 						<i class="fa fa-user-circle user" aria-hidden="true"></i>
@@ -79,7 +79,7 @@ else
 					</div> 
 				</a>
 			</div>
-			<div class="col-lg-9 aside">
+			<div class="col-lg-10 aside">
 				<div class="row">
                     <div class="col-lg-10 col-xs-12 m-2" >
 						<div class="search-box pull-right">
@@ -107,7 +107,7 @@ else
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-3 menu p-0">
+			<div class="col-lg-2 menu p-0">
 				<nav>
 				<ul id="nav" class="nav nav-pills flex-column" role="tablist"> 
 					<li class="nav-item">
@@ -119,7 +119,7 @@ else
 				</ul>
 				</nav>
 			</div>
-			<div class="col-lg-9 home pt-2">
+			<div class="col-lg-10 home pt-2">
 			<div class="tab-content">
 			  <div id="dsfile" class="container tab-pane active <?php if(isset($_REQUEST['content'])) {echo 'del';}?>">
 				<div class="space">
@@ -175,7 +175,7 @@ else
 					{
 						echo "<h4 class='h4 text-center mb-3'>DANH SÁCH FILE</h4>";
 						$search = $_REQUEST['content'];
-						$url = "http://localhost/Webshell_check/api/timKiem.php?search={$search}&idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
+						$url = "http://localhost/Webshell_check/api/timkiem.php?search={$search}&idAccount={$_SESSION['id']}&role={$_SESSION['phanquyen']}";
 						$xuLyFile->showFiles($url);
 					}
 					?>
@@ -210,6 +210,13 @@ else
 								$xuLyFile->changeLocation("index.php?content={$searchContent}");
 								break;
 							}
+							case 'btn-setup':
+							{
+								$maxsize = $_POST['txtdungluong'];
+								$extentions = $_REQUEST['ext-file'];
+								$admin->updateSetting($maxsize, $extentions);
+								break;
+							}
 							case 'Đăng xuất':
 							{
 								session_unset();
@@ -224,58 +231,9 @@ else
 			  <div id="tailen" class="container tab-pane fade">
 				 <h4 class="title-tab">Cấu hình</h4>
 				 <div class="form-cauhinh">
-				 <form id="form1" name="form1" method="post" action="">
-						<table width="926" border="1" align="center" cellpadding="5" cellspacing="0" class="table table-bordered">
-							<tr>
-							<td align="left" valign="middle">Kích thước tối đa của file tải lên</td>
-							<td align="left" valign="middle"><p>
-								<label for="txtdai"></label>
-								<input type="text" name="txtdai" id="txtdai" />
-								<label for="txtrong"> x </label>
-								<input type="text" name="txtrong" id="txtrong" />
-							</p>
-							<p>
-								<input type="checkbox" name="checksize" id="checksize" />
-								<label for="checksize"></label>
-							Tự động resize ảnh nếu kích thước lớn hơn kích thước tối đa</p></td>
-							</tr>
-							<tr>
-							<td align="left" valign="middle">Dung lượng tối đa của file tải lên:</td>
-							<td align="left" valign="middle"><p>
-								<label for="txtdungluong"></label>
-								<select name="txtdungluong" id="txtdungluong">
-								<option value="1">200.00 MB</option>
-								<option value="2">150.00 MB</option>
-								</select>
-							</p>
-							<p>(Sever của bạn chỉ cho phép tải file có dụng lượng: 200.00 MB) </p></td>
-							</tr>
-							<tr>
-							<td align="left" valign="middle">Kiểu kiểm tra file tải lên:</td>
-							<td align="left" valign="middle"><label for="txtkieufile"></label>
-								<select name="txtkieufile" id="txtkieufile">
-								<option value="1">Mạnh</option>
-								<option value="2">Trung bình</option>
-								<option value="3">Yếu</option>
-							</select></td>
-							</tr>
-							<tr>
-							<td align="left" valign="middle">Bắt buộc nhập chú thích cho file khi upload</td>
-							<td align="left" valign="middle"><input type="checkbox" name="checkcomment" id="checkcomment" />
-							<label for="checkcomment"></label></td>
-							</tr>
-							<tr>
-							<td align="left" valign="middle">Tự xác định mô tả từ tên file</td>
-							<td align="left" valign="middle"><input type="checkbox" name="checkmotafile" id="checkmotafile" />
-							<label for="checkmotafile"></label></td>
-							</tr>
-							<tr>
-							  <td colspan="2" align="center" valign="middle">
-								<button type="submit" class="btn btn-setup">Cài đặt</button>
-							  </td>
-							</tr>
-						</table>
-					</form>
+					<?php
+						$admin->showSetting();
+					?>
 				 </div>
 			  </div>
 			</div>

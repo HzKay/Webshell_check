@@ -5,6 +5,11 @@
         {
             switch ((int) $mess)
             {
+                case 2:
+                    {
+                        $this->delFileSuccess();
+                        break;
+                    } 
                 case 1:
                     {
                         $this->uploadSuccess();
@@ -20,11 +25,6 @@
                         $this->uploadFileIsWebshell();
                         break;
                     } 
-                case 2:
-                    {
-                        $this->delFileSuccess();
-                        break;
-                    } 
                 case -2:
                     {
                         $this->delFileFail();
@@ -38,6 +38,16 @@
                 case 4:
                     {
                         $this->updateFileAccept();
+                        break;
+                    }
+                case -4:
+                    {
+                        $this->uploadFailType();
+                        break;
+                    }
+                case -5:
+                    {
+                        $this->uploadFailSize();
                         break;
                     }
                 default:
@@ -157,6 +167,32 @@
             ";
             echo $render;
         }
+
+        private function uploadFailType ()
+        {
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Upload file thất bại, <br> Loại file không hợp lệ</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
+        }
+
+        private function uploadFailSize ()
+        {
+            $render = "
+                <div class='icon-status mt-2 p-5'>     
+                    <i class='far fa-times-circle text-danger mb-3'></i></br>
+                    <h3 class='text-danger'>Upload file thất bại<br> Kích thước file quá lớn</h3>
+                </div>
+                <input type='button' class='btn btn-accept mb-3' data-dismiss='modal' value='Okay'>
+            ";
+            echo $render;
+        }
+
+
 
         private function defaultError ()
         {

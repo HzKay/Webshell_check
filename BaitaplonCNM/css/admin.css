@@ -17,10 +17,7 @@
 	justify-content: center;
 	align-items: center;
 }
-.logo
-{
-  
-}
+
 .user
 {
     font-size: 38px;
@@ -252,4 +249,8 @@
 
 .del .space {
 	display: none;
+}
+
+.check-ex {
+	margin: 0.4rem;
 }

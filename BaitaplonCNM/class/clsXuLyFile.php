@@ -6,13 +6,25 @@ class clsXuLyFile extends handleApi
     private $host = "";
 
     public function xuLyLuuFile()
-    {
-        $resultCheck = $this->kiemTraFile();
-        if ($resultCheck == 1) {
-            $result = -1;
-            $this->changeLocation('index.php', $result);
+    { 
+        $name = $_FILES["file"]["name"];
+        $size = $_FILES['file']['size'];
+        $type = $_FILES['file']['type'];
+        $temp = explode(".", $name);
+        $extension = end($temp);
+        
+        $isValid = $this->validataFileWithSetting($size, $type, $extension);
+        if ($isValid != 1)
+        {
+            $this->changeLocation('index.php', $isValid);
         } else {
-            $this->luuFile();
+            $resultCheck = $this->kiemTraFile();
+            if ($resultCheck == 1) {
+                $result = -1;
+                $this->changeLocation('index.php', $result);
+            } else {
+                $this->luuFile();
+            }
         }
     }
 
@@ -43,21 +55,25 @@ class clsXuLyFile extends handleApi
             }
 
             curl_close($curl);
-            return json_decode($response)->result;
+
+            if (!is_null(json_decode($response)))
+            {
+                return json_decode($response)->result;
+            }
+
+            return 1;
         }
     }
     
     public function luuFile()
     {
-        include_once("clsnotion.php");
-        $notion = new notionStatus();
-
         if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
             // Lấy thông tin về tập tin
             $name = $_FILES["file"]["name"];
             $filename = pathinfo($name, PATHINFO_FILENAME);
             $tmp_name = $_FILES["file"]["tmp_name"];
             $size = $_FILES['file']['size'];
+            $type = $_FILES['file']['type'];
             $temp = explode(".", $name);
             $extension = end($temp);
             $filepath = $_SESSION['accountFolder'] . '/' . $name;
@@ -66,6 +82,7 @@ class clsXuLyFile extends handleApi
             if (isset($_SESSION["id"])) {
                 $idaccount = $_SESSION["id"];
                 $fileExist = false;
+                
                 if (file_exists($filepath) && is_file($filepath)) {
                     $fileExist = true;
                 } 
@@ -87,6 +104,7 @@ class clsXuLyFile extends handleApi
                     
                     $this->changeLocation('index.php', $result);
                 }
+
             } else {
                 $this->changeLocation('index.php', 99);
             }
@@ -146,6 +164,69 @@ class clsXuLyFile extends handleApi
         } else {
             return 0;
         }
+    }
+
+    public function validataFileWithSetting($fileSize, $fileType, $extention)
+    {
+        $valiSize = $this->validateFileSize($fileSize);
+        $valiType = $this->validateFileType($fileType);
+        $valiExtent = $this->validateFileExtent($extention);
+
+        if ($valiSize == 1)
+        {
+            if (($valiType == 1) && ($valiExtent == 1))
+            {
+                return 1;
+            }
+
+            return -4;
+        } else {
+            return -5;
+        }
+    }
+
+    public function validateFileSize ($fileSize)
+    {
+        $maxsize = $this->getSettingFile('maxsize');
+
+        if ($maxsize > $fileSize)
+        {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public function validateFileType ($filetype)
+    {
+        $allow_file_type = explode(",", $this->getSettingFile('allowed_file_type'));
+
+        if (in_array($filetype, $allow_file_type))
+        {
+            return 1;
+        } 
+
+        return 0;
+    }
+
+    public function validateFileExtent ($extension)
+    {
+        $allowed_extentions = explode(",", $this->getSettingFile('allowed_extentions'));
+
+        if (in_array($extension, $allowed_extentions))
+        {
+            return 1;
+        } 
+
+        return 0;
+    }
+
+    private function getSettingFile($index = 'maxsize')
+    {
+        $filepath = "./config.ini";
+        $setting = parse_ini_file($filepath);
+
+        return $setting[$index];
     }
 
     public function changeLocation ($file = 'filename.php', $message=-520)
